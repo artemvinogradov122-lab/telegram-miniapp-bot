@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Telegram Mini App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <!-- Скрипт Telegram Web Apps -->
+    <script src="https://telegram.org"></script>
+</head>
+<body>
+    <div class="app">
+        <h1 class="title">Telegram Mini App</h1>
+        <p class="subtitle">Мини‑приложение показывает информацию о пользователе Telegram.</p>
+
+        <div class="user-card" id="user-card">
+            <div class="avatar-wrapper">
+                <img id="user-avatar" class="user-avatar" alt="Аватар пользователя">
+            </div>
+            <div class="user-info">
+                <div id="user-name" class="user-name">Имя пользователя</div>
+                <div id="user-username" class="user-username">@username</div>
+            </div>
+        </div>
+
+        <button id="action-button" class="primary-button">
+            Отправить данные в бота
+        </button>
+
+        <button id="close-button" class="secondary-button">
+            Закрыть приложение
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
