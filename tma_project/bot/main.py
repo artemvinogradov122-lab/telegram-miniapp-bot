@@ -2,7 +2,13 @@ import asyncio
 import logging
 import os
 from pathlib import Path
+import sys
 
+# Добавляем корневую директорию проекта в sys.path
+project_root_for_import = Path(__file__).resolve().parents[2]
+sys.path.append(str(project_root_for_import))
+
+from keep_alive import keep_alive
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
@@ -76,3 +82,4 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
+
