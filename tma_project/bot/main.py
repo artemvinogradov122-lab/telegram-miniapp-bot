@@ -2,16 +2,29 @@ import asyncio
 import logging
 import os
 from pathlib import Path
-import sys
+from threading import Thread
+from flask import Flask
 
-# Добавляем корневую директорию проекта в sys.path
-project_root_for_import = Path(__file__).resolve().parents[2]
-sys.path.append(str(project_root_for_import))
-
-from keep_alive import keep_alive
 from aiogram import Bot, Dispatcher
 from aiogram.filters import CommandStart
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+
+
+# --- Keep Alive Server ---
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "I'm alive"
+
+def run():
+  port = int(os.environ.get('PORT', 10000))
+  app.run(host='0.0.0.0', port=port)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
+# -------------------------
 
 
 logging.basicConfig(
@@ -22,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_env(env_path: Path) -> dict:
-    env: dict[str, str] = {}
+    env = {}
     if not env_path.is_file():
         return env
 
@@ -36,6 +49,7 @@ def load_env(env_path: Path) -> dict:
 
 
 async def main() -> None:
+    keep_alive()
     project_root = Path(__file__).resolve().parents[1]
     env_values = load_env(project_root / ".env")
 
@@ -75,7 +89,7 @@ async def main() -> None:
     @dp.message()
     async def fallback_echo(message: Message) -> None:
         logger.info("Получено сообщение: %s от id=%s", message.text, message.from_user.id)
-        await message.answer("Я тебя вижу. Напиши /start, чтобы открыть мини‑приложение.")
+        await message.answer("Я тебя вижу 🙂 Напиши /start, чтобы открыть мини‑приложение.")
 
     await dp.start_polling(bot)
 
