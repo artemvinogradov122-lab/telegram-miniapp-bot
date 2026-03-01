@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 def load_env(env_path: Path) -> dict:
-    env = {}
+    env: dict[str, str] = {}
     if not env_path.is_file():
         return env
 
@@ -33,11 +33,14 @@ async def main() -> None:
     project_root = Path(__file__).resolve().parents[1]
     env_values = load_env(project_root / ".env")
 
-        bot_token = os.getenv("BOT_TOKEN") or env_values.get("BOT_TOKEN")
-    webapp_url = os.getenv("WEBAPP_URL") or env_values.get("WEBAPP_URL") or "https://example.com"
+    bot_token = os.getenv("BOT_TOKEN") or env_values.get("BOT_TOKEN")
+    webapp_url = os.getenv("WEBAPP_URL") or env_values.get("WEBAPP_URL")
 
     if not bot_token:
         raise RuntimeError("BOT_TOKEN is not set. Specify it in .env or environment variables.")
+    if not webapp_url:
+        raise RuntimeError("WEBAPP_URL is not set. Specify it in .env or environment variables.")
+
     bot = Bot(token=bot_token)
     dp = Dispatcher()
 
@@ -66,12 +69,10 @@ async def main() -> None:
     @dp.message()
     async def fallback_echo(message: Message) -> None:
         logger.info("Получено сообщение: %s от id=%s", message.text, message.from_user.id)
-        await message.answer("Я тебя вижу 🙂 Напиши /start, чтобы открыть мини‑приложение.")
+        await message.answer("Я тебя вижу. Напиши /start, чтобы открыть мини‑приложение.")
 
     await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
     asyncio.run(main())
-
-
